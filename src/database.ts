@@ -1,19 +1,19 @@
-
-// knex.ts
-import { Knex, knex as setupKnex } from 'knex'
+// knexfile.ts
+import type { Knex } from 'knex';
 import { env } from './env';
-if(!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL not found")
-}
-export const config: Knex.Config = {
-  client: "sqlite",
-  connection: {
-    filename: env.DATABASE_URL,
+
+export const config: { [key: string]: Knex.Config } = {
+  development: {
+    client: 'sqlite3',
+    connection: {
+      filename: env.DATABASE_URL,
+    },
+    useNullAsDefault: true,
+    migrations: {
+      extension: 'ts',
+      directory: './db/migrations',
+    },
   },
-  migrations: {
-    extension: 'ts',
-    directory: './db/migrations/',
-  },
-  useNullAsDefault: true,
 };
-export const knex = setupKnex(config)
+
+export default config;
