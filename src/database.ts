@@ -1,4 +1,5 @@
-// knexfile.ts
+// src/database.ts
+import { knex as setupKnex } from 'knex';
 import type { Knex } from 'knex';
 import { env } from './env';
 
@@ -16,4 +17,5 @@ export const config: { [key: string]: Knex.Config } = {
   },
 };
 
-export default config;
+// Esta é a instância que deve ser usada nas rotas
+export const knex = setupKnex(config[env.NODE_ENV || 'development']);
