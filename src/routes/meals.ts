@@ -55,7 +55,19 @@ export async function mealsRoutes(app: FastifyInstance) {
     const meals = await knex("meals")
       .where({ user_id: req.user?.id })
       .select("*");
-    
+
     return res.status(200).send(meals);
   });
+  app.get("/:id", {preHandler: [checkSessionIdExists]}, async (req, res) => {
+    const { id } = req.params as { id: string };
+    const meal = await knex("meals")
+      .where({ id, user_id: req.user?.id })
+      .first();
+
+    if (!meal) {
+      return res.status(404).send({ error: "Meal not found" });
+    }
+
+    return res.status(200).send(meal);
+  })
 }
