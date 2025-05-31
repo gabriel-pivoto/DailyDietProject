@@ -33,4 +33,25 @@ export async function usersRoutes(app: FastifyInstance) {
     });
     return res.status(201).send();
   });
+  app.get("/", async (req, res) => {
+    const session_id = req.cookies.session_id;
+
+    if (!session_id) {
+      return res.status(401).send({ error: "Unauthorized" });
+    }
+
+    const user = await knex("users").where({ session_id }).first();
+
+    if (!user) {
+      return res.status(401).send({ error: "Unauthorized" });
+    }
+
+    return res.status(200).send({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+    });
+  });
 }
